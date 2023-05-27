@@ -1,8 +1,8 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside width="350px">
-        <el-col :span="12">
+      <el-aside width="260px">
+        <el-col :span="15">
           <h5 class="mb-2">控制台</h5>
           <el-menu
             active-text-color="#ffd04b"
@@ -18,7 +18,7 @@
               <span>上传并修改剧本</span>
             </el-menu-item>
             <el-menu-item index="new">
-              <span>新建剧本</span>
+              <span>使用已有角色新建剧本</span>
             </el-menu-item>
             <el-menu-item index="3">
               <span>开摆</span>
@@ -29,6 +29,17 @@
 
       <el-container>
         <router-view />
+        <el-footer>
+          <!-- Target -->
+          <el-input id="foo" :value="JSON.stringify(store.bloodJSon)" />
+          <!-- Trigger -->
+          <button class="cpbtn" data-clipboard-target="#foo">
+            <img
+              src="https://clipboardjs.com/assets/images/clippy.svg"
+              alt="Copy to clipboard"
+            />
+          </button>
+        </el-footer>
       </el-container>
     </el-container>
   </div>
@@ -37,9 +48,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useBlood } from "../store/index.js";
+import Clipboard from "clipboard";
 const route = useRoute();
 const router = useRouter();
-let isCollapse = ref(false);
+
+new Clipboard(".cpbtn");
+let store = useBlood();
+let bloodJSon = ref<Object[]>([{}]);
+let result = ref("");
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath);
   switch (key) {
@@ -70,5 +87,11 @@ const handleClose = (key: string, keyPath: string[]) => {
 <style lang="less" scoped>
 .common-layout {
   width: 100%;
+}
+.cpbtn {
+  width: 30px;
+  img {
+    width: 100%;
+  }
 }
 </style>

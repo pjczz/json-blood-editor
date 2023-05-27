@@ -9,7 +9,6 @@
     >
       <el-form-item :label="item" v-for="(item, index) in Object.keys(current)">
         <el-switch v-model="current[item]" v-if="item == 'setup'" />
-
         <el-input v-model="current[item]" v-else />
       </el-form-item>
       <el-form-item>

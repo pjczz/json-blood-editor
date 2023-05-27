@@ -5,6 +5,7 @@ export const useBlood=defineStore("test",{
 	state: () =>{
 		return  ({
 			bloodJSon:default2,
+			AllJSon:default2,
 			name:"小狮子",
 			age:18
 			}) //为了避免出错，返回的值用()包起来

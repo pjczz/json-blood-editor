@@ -8,17 +8,7 @@
         <el-main>
           <HomeMain :bloodJSon="bloodJSon"></HomeMain>
         </el-main>
-        <el-footer>
-          <!-- Target -->
-          <el-input id="foo" :value="JSON.stringify(store.bloodJSon)" />
-          <!-- Trigger -->
-          <button class="cpbtn" data-clipboard-target="#foo">
-            <img
-              src="https://clipboardjs.com/assets/images/clippy.svg"
-              alt="Copy to clipboard"
-            />
-          </button>
-        </el-footer>
+
       </el-container>
   </div>
 </template>
@@ -32,7 +22,7 @@ new Clipboard(".cpbtn");
 let store = useBlood();
 let bloodJSon = ref<Object[]>([{}]);
 let result = ref("");
-let isCollapse = ref(false);
+
 //上传
 const handleFile = function (e: Event) {
   const fileInput = e.target;
@@ -63,11 +53,5 @@ const handleFile = function (e: Event) {
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
-}
-.cpbtn {
-  width: 30px;
-  img {
-    width: 100%;
-  }
 }
 </style>

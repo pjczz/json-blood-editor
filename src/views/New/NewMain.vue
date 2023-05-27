@@ -5,7 +5,7 @@
     :filter-method="filterMethod"
     filter-placeholder="State Abbreviations"
     :data="data[0]"
-    :titles="['角色列表', '当前剧本角色']"
+    :titles="['镇民列表', '当前剧本角色']"
   />
   <el-transfer
   v-model="Osvalue"
@@ -13,7 +13,7 @@
   :filter-method="filterMethod"
   filter-placeholder="State Abbreviations"
   :data="data[1]"
-  :titles="['角色列表', '当前剧本角色']"
+  :titles="['外来列表', '当前剧本角色']"
 />
 <el-transfer
   v-model="Mivalue"
@@ -21,7 +21,7 @@
   :filter-method="filterMethod"
   filter-placeholder="State Abbreviations"
   :data="data[2]"
-  :titles="['角色列表', '当前剧本角色']"
+  :titles="['爪牙列表', '当前剧本角色']"
 />
 <el-transfer
   v-model="Dmvalue"
@@ -29,7 +29,7 @@
   :filter-method="filterMethod"
   filter-placeholder="State Abbreviations"
   :data="data[3]"
-  :titles="['角色列表', '当前剧本角色']"
+  :titles="['恶魔列表', '当前剧本角色']"
 />
 </template>
 
@@ -66,7 +66,7 @@ const generateData = () => {
   const minion = ref([]);
   const demon = ref([]);
   demon;
-  store.bloodJSon.forEach((item, index) => {
+  store.AllJSon.forEach((item, index) => {
     if (item.team) {
       if (item.team == "townsfolk") townsfolk.value.push(item.name);
       if (item.team == "outsider") outsider.value.push(item.name);
@@ -74,7 +74,7 @@ const generateData = () => {
       if (item.team == "demon") demon.value.push(item.name);
     }
   });
-  console.log(store.bloodJSon);
+  console.log(store.AllJSon);
   console.log(townsfolk.value);
 
   const initials = townsfolk.value;
@@ -109,13 +109,13 @@ const generateData = () => {
   return [Tfdata,Osdata,Midata,Dmdata];
 };
 
-const data = ref<Option[]>(generateData());
+const data = ref<Option[][]>(generateData());
 const Tfvalue = ref([]);
 const Osvalue = ref([]);
 const Mivalue = ref([]);
 const Dmvalue = ref([]);
 
-const filterMethod = (query, item) => {
+const filterMethod = (query:string, item:any) => {
   return item.initial.includes(query);
 };
 </script>
