@@ -27,7 +27,7 @@ const props = defineProps({
 });
 const { bloodObj } = toRefs(props);
 const toEdit = () => {
-  router.push({ path: `/edit/${bloodObj.value.id}`});
+  router.push({ path: `/edit/${bloodObj.value.id}` });
 };
 
 console.log();
@@ -38,7 +38,8 @@ console.log();
 .main-cell {
   display: flex;
   text-align: center;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
 }
 .main-cell .block {
   flex: 1;

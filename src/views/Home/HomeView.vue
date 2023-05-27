@@ -6,7 +6,8 @@
         </el-header>
 
         <el-main>
-          <HomeMain :bloodJSon="bloodJSon"></HomeMain>
+          <HomeMain :bloodJSon="bloodJSon" ></HomeMain>
+          <el-empty description="no data" v-if="store.bloodJSon.length==0" />
         </el-main>
 
       </el-container>
@@ -18,6 +19,7 @@ import { ref, reactive } from "vue";
 import HomeMain from "./HomeMain.vue";
 import { useBlood } from "../../store/index.js";
 import Clipboard from "clipboard";
+
 new Clipboard(".cpbtn");
 let store = useBlood();
 let bloodJSon = ref<Object[]>([{}]);

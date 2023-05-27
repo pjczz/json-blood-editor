@@ -1,10 +1,12 @@
 <template>
   <div class="home-main">
-    {{ bloodJSon[0] }}
     <div class="main-body">
     <div v-for="(item, index) in store.bloodJSon" key="item.id">
       <MainCell :blood-obj="item" />
+      
     </div>
+    <div class="insert"><el-button type="primary" size="large" :icon="Plus" @click="goInsert()" /></div>
+    
   </div>
   </div>
 </template>
@@ -22,12 +24,17 @@ import {
   toRefs,
 } from "vue";
 import MainCell from "./MainCell.vue";
+import { Plus } from '@element-plus/icons-vue'
 import {useBlood} from "../../store/index.js";
+import {useRouter} from 'vue-router';
 let store = useBlood()
+let router = useRouter()
 const props = defineProps({
   bloodJSon: { type: Array, required: true, default: () => [] },
 });
-
+const goInsert=()=>{
+  router.push({path:'/insert'})
+}
 console.log();
 </script>
 
@@ -37,6 +44,11 @@ console.log();
   display: grid;
   grid-template-columns: repeat(5, 20%);
   grid-gap: 20px;
+  .insert{
+    display: flex;
+    justify-content:center;
+    align-items:center;
+  }
 
 }
 </style>

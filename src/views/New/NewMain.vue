@@ -8,29 +8,30 @@
     :titles="['镇民列表', '当前剧本角色']"
   />
   <el-transfer
-  v-model="Osvalue"
-  filterable
-  :filter-method="filterMethod"
-  filter-placeholder="State Abbreviations"
-  :data="data[1]"
-  :titles="['外来列表', '当前剧本角色']"
-/>
-<el-transfer
-  v-model="Mivalue"
-  filterable
-  :filter-method="filterMethod"
-  filter-placeholder="State Abbreviations"
-  :data="data[2]"
-  :titles="['爪牙列表', '当前剧本角色']"
-/>
-<el-transfer
-  v-model="Dmvalue"
-  filterable
-  :filter-method="filterMethod"
-  filter-placeholder="State Abbreviations"
-  :data="data[3]"
-  :titles="['恶魔列表', '当前剧本角色']"
-/>
+    v-model="Osvalue"
+    filterable
+    :filter-method="filterMethod"
+    filter-placeholder="State Abbreviations"
+    :data="data[1]"
+    :titles="['外来列表', '当前剧本角色']"
+  />
+  <el-transfer
+    v-model="Mivalue"
+    filterable
+    :filter-method="filterMethod"
+    filter-placeholder="State Abbreviations"
+    :data="data[2]"
+    :titles="['爪牙列表', '当前剧本角色']"
+  />
+  <el-transfer
+    v-model="Dmvalue"
+    filterable
+    :filter-method="filterMethod"
+    filter-placeholder="State Abbreviations"
+    :data="data[3]"
+    :titles="['恶魔列表', '当前剧本角色']"
+  />
+  <el-button type="primary" @click="submitForm()"> 保存 </el-button>
 </template>
 
 <script lang="ts" setup>
@@ -65,48 +66,46 @@ const generateData = () => {
   const outsider = ref([]);
   const minion = ref([]);
   const demon = ref([]);
-  demon;
+
   store.AllJSon.forEach((item, index) => {
     if (item.team) {
-      if (item.team == "townsfolk") townsfolk.value.push(item.name);
-      if (item.team == "outsider") outsider.value.push(item.name);
-      if (item.team == "minion") minion.value.push(item.name);
-      if (item.team == "demon") demon.value.push(item.name);
+      if (item.team == "townsfolk") townsfolk.value.push(item);
+      if (item.team == "outsider") outsider.value.push(item);
+      if (item.team == "minion") minion.value.push(item);
+      if (item.team == "demon") demon.value.push(item);
     }
   });
-  console.log(store.AllJSon);
-  console.log(townsfolk.value);
 
   const initials = townsfolk.value;
-  townsfolk.value.forEach((name, index) => {
+  townsfolk.value.forEach((item, index) => {
     Tfdata.push({
-      label: name,
+      label: item.name,
       key: index,
-      initial: townsfolk.value[index],
+      initial: townsfolk.value[index].name,
     });
   });
-  outsider.value.forEach((name, index) => {
+  outsider.value.forEach((item, index) => {
     Osdata.push({
-      label: name,
+      label: item.name,
       key: index,
-      initial: outsider.value[index],
+      initial: outsider.value[index].name,
     });
   });
-  minion.value.forEach((name, index) => {
+  minion.value.forEach((item, index) => {
     Midata.push({
-      label: name,
+      label: item.name,
       key: index,
-      initial: minion.value[index],
+      initial: minion.value[index].name,
     });
   });
-  demon.value.forEach((name, index) => {
+  demon.value.forEach((item, index) => {
     Dmdata.push({
-      label: name,
+      label: item.name,
       key: index,
-      initial: demon.value[index],
+      initial: demon.value[index].name,
     });
   });
-  return [Tfdata,Osdata,Midata,Dmdata];
+  return [Tfdata, Osdata, Midata, Dmdata, townsfolk.value, outsider.value, minion.value, demon.value];
 };
 
 const data = ref<Option[][]>(generateData());
@@ -115,7 +114,23 @@ const Osvalue = ref([]);
 const Mivalue = ref([]);
 const Dmvalue = ref([]);
 
-const filterMethod = (query:string, item:any) => {
+const filterMethod = (query: string, item: any) => {
   return item.initial.includes(query);
+};
+const submitForm = () => {
+  console.log(data);
+  Tfvalue.value.forEach((item, index) => {
+    store.bloodJSon.push(data.value[4][item]);
+  });
+  Osvalue.value.forEach((item, index) => {
+    store.bloodJSon.push(data.value[5][item]);
+  });
+  Mivalue.value.forEach((item, index) => {
+    store.bloodJSon.push(data.value[6][item]);
+  });
+  Dmvalue.value.forEach((item, index) => {
+    store.bloodJSon.push(data.value[7][item]);
+  });
+  console.log(store.bloodJSon);
 };
 </script>

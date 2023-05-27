@@ -4,7 +4,7 @@ import { defineStore } from 'pinia' //引入pinia
 export const useBlood=defineStore("test",{ 
 	state: () =>{
 		return  ({
-			bloodJSon:default2,
+			bloodJSon:[],
 			AllJSon:default2,
 			name:"小狮子",
 			age:18
