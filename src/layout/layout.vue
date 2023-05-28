@@ -31,14 +31,24 @@
         <router-view />
         <el-footer>
           <!-- Target -->
-          <el-input id="foo" :value="JSON.stringify(store.bloodJSon)" />
-          <!-- Trigger -->
+          <el-input
+            id="foo"
+            :value="JSON.stringify(store.bloodJSon)"
+            @click="saveJSON()"
+          />
+          <el-button
+            :icon="Download"
+            :value="JSON.stringify(store.bloodJSon)"
+            @click="saveJSON()"
+          >导出</el-button>
+          <!-- Trigger 
           <button class="cpbtn" data-clipboard-target="#foo">
             <img
               src="https://clipboardjs.com/assets/images/clippy.svg"
               alt="Copy to clipboard"
             />
           </button>
+          -->
         </el-footer>
       </el-container>
     </el-container>
@@ -47,13 +57,13 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { Download } from "@element-plus/icons-vue";
 import { useRoute, useRouter } from "vue-router";
 import { useBlood } from "../store/index.js";
 import Clipboard from "clipboard";
 const route = useRoute();
 const router = useRouter();
 
-new Clipboard(".cpbtn");
 let store = useBlood();
 let bloodJSon = ref<Object[]>([{}]);
 let result = ref("");
@@ -81,6 +91,36 @@ const handleOpen = (key: string, keyPath: string[]) => {
 };
 const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath);
+};
+const saveJSON = () => {
+  // 生成json文件
+  const filename = "听我说谢谢你.json";
+  const blob = new Blob([JSON.stringify(store.bloodJSon)], {
+    type: "text/json",
+  });
+  const e = document.createEvent("MouseEvents");
+  const a = document.createElement("a");
+  a.download = filename;
+  a.href = window.URL.createObjectURL(blob);
+  a.dataset.downloadurl = ["text/json", a.download, a.href].join(":");
+  e.initMouseEvent(
+    "click",
+    true,
+    false,
+    window,
+    0,
+    0,
+    0,
+    0,
+    0,
+    false,
+    false,
+    false,
+    false,
+    0,
+    null
+  );
+  a.dispatchEvent(e);
 };
 </script>
 

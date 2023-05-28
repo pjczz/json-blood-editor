@@ -90,10 +90,6 @@ const goBack = () => {
 };
 const submitForm = () => {
   store.bloodJSon.push(bloodJSon.value)
-  console.log(store.bloodJSon);
-};
-const OnFormChange = () => {
-  console.log(store.bloodJSon);
 };
 </script>
 
