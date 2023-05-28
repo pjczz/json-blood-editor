@@ -15,7 +15,7 @@
             router
           >
             <el-menu-item index="home">
-              <span>上传并修改剧本</span>
+              <span>编辑剧本</span>
             </el-menu-item>
             <el-menu-item index="new">
               <span>使用已有角色新建剧本</span>
