@@ -30,12 +30,6 @@
       <el-container>
         <router-view />
         <el-footer>
-          <!-- Target -->
-          <el-input
-            id="foo"
-            :value="JSON.stringify(store.bloodJSon)"
-            @click="saveJSON()"
-          />
           <el-button
             :icon="Download"
             :value="JSON.stringify(store.bloodJSon)"
@@ -60,7 +54,6 @@ import { ref } from "vue";
 import { Download } from "@element-plus/icons-vue";
 import { useRoute, useRouter } from "vue-router";
 import { useBlood } from "../store/index.js";
-import Clipboard from "clipboard";
 const route = useRoute();
 const router = useRouter();
 

@@ -40,6 +40,9 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useBlood } from "../../store/index.js";
 import {Remove} from "@element-plus/icons-vue";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import type { Action } from 'element-plus'
+
 let store = useBlood();
 let route = useRoute();
 let router = useRouter();
@@ -136,6 +139,18 @@ const submitForm = () => {
   Dmvalue.value.forEach((item, index) => {
     store.bloodJSon.push(data.value[7][item]);
   });
+
+  ElMessageBox.alert('保存成功！注意不要重复保存，保存为添加机制！', 'Title', {
+    // if you want to disable its autofocus
+    // autofocus: false,
+    confirmButtonText: 'OK',
+    callback: (action: Action) => {
+      ElMessage({
+        type: 'info',
+        message: `保存成功: ${action}`,
+      })
+    },
+  })
 };
 // 清除之前的数据 
 const clearBloodJSon=()=>{

@@ -18,9 +18,7 @@
 import { ref, reactive } from "vue";
 import HomeMain from "./HomeMain.vue";
 import { useBlood } from "../../store/index.js";
-import Clipboard from "clipboard";
 
-new Clipboard(".cpbtn");
 let store = useBlood();
 let bloodJSon = ref<Object[]>([{}]);
 let result = ref("");
