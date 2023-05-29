@@ -20,7 +20,7 @@
             <el-menu-item index="new">
               <span>添加已有角色</span>
             </el-menu-item>
-            <el-menu-item index="3">
+            <el-menu-item index="about">
               <span>开摆</span>
             </el-menu-item>
           </el-menu>
@@ -74,8 +74,8 @@ const handleOpen = (key: string, keyPath: string[]) => {
       }
       break;
     case "3":
-      if (route.name != "home") {
-        router.push({ name: "home" });
+      if (route.name != "about") {
+        router.push({ name: "about" });
       }
       break;
     case "4":
@@ -87,7 +87,7 @@ const handleClose = (key: string, keyPath: string[]) => {
 };
 const saveJSON = () => {
   // 生成json文件
-  const filename = "听我说谢谢你.json";
+  const filename = "custom.json";
   const blob = new Blob([JSON.stringify(store.bloodJSon)], {
     type: "text/json",
   });
