@@ -41,7 +41,34 @@
         <el-switch v-model="bloodJSon.setup" />
       </el-form-item>
       <el-form-item label="提示">
-        <el-input v-model="bloodJSon.reminders" />
+        <el-tag
+          v-for="tag in bloodJSon.reminders"
+          :key="tag"
+          class="mx-1"
+          closable
+          :disable-transitions="false"
+          @close="handleClose(tag)"
+        >
+          {{ tag }}
+        </el-tag>
+        <el-input
+        style="width: 50px;"
+          v-if="inputVisible"
+          ref="InputRef"
+          v-model="inputValue"
+          class="w-50 m-2"
+          size="small"
+          @keyup.enter="handleInputConfirm"
+          @blur="handleInputConfirm"
+        />
+        <el-button
+          v-else
+          class="button-new-tag ml-1"
+          size="small"
+          @click="showInput"
+        >
+          + 添加提示
+        </el-button>
       </el-form-item>
       <el-form-item
         label="id"
@@ -109,16 +136,18 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, toRaw } from "vue";
-import { ElMessage  } from "element-plus";
+import { reactive, ref, toRaw,nextTick } from "vue";
+import { ElMessage,ElInput } from "element-plus";
 import type { FormInstance, FormRules } from "element-plus";
 import { useRoute, useRouter } from "vue-router";
 import { useBlood } from "../../store/index.js";
 let store = useBlood();
 let route = useRoute();
 let router = useRouter();
-let current = ref();
+const inputVisible = ref(false);
 const formRef = ref<FormInstance>();
+const InputRef = ref<InstanceType<typeof ElInput>>()
+const inputValue = ref('')
 let bloodJSon = reactive({
   id: "",
   image: "",
@@ -142,15 +171,14 @@ const goBack = () => {
   router.go(-1);
 };
 const submitForm = (formEl: FormInstance | undefined) => {
-
   if (!formEl) return;
 
   formEl.validate((valid) => {
     if (valid) {
       ElMessage({
-    message: '添加成功，请勿重复添加.',
-    type: 'success',
-  })
+        message: "添加成功，请勿重复添加.",
+        type: "success",
+      });
       store.bloodJSon.push(toRaw(bloodJSon));
     } else {
       console.log("error submit!");
@@ -158,6 +186,24 @@ const submitForm = (formEl: FormInstance | undefined) => {
     }
   });
 };
+const handleClose = (tag: string) => {
+  bloodJSon.reminders.splice(bloodJSon.reminders.indexOf(tag), 1)
+}
+
+const showInput = () => {
+  inputVisible.value = true
+  nextTick(() => {
+    InputRef.value!.input!.focus()
+  })
+}
+
+const handleInputConfirm = () => {
+  if (inputValue.value) {
+    bloodJSon.reminders.push(inputValue.value)
+  }
+  inputVisible.value = false
+  inputValue.value = ''
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

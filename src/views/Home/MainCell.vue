@@ -1,6 +1,10 @@
 <template>
-  <div class="main-cell" @click="toEdit">
-    <div class="block">
+  <div class="main-cell" >
+    <div class="delete">
+      <el-button @click="deleteEvent()"><el-icon><Delete /></el-icon
+      ></el-button>
+    </div>
+    <div class="block" @click="toEdit">
       <el-avatar shape="square" :size="100" fit="cover" :src="bloodObj.image" />
       <span class="title">{{ bloodObj.name }}</span>
     </div>
@@ -20,6 +24,7 @@ import {
   toRefs,
 } from "vue";
 import { useRouter } from "vue-router";
+import { Delete } from "@element-plus/icons-vue";
 
 const router = useRouter();
 const props = defineProps({
@@ -29,7 +34,10 @@ const { bloodObj } = toRefs(props);
 const toEdit = () => {
   router.push({ path: `/edit/${bloodObj.value.id}` });
 };
-
+const emits =defineEmits(['deleteEvent'])
+const deleteEvent=()=>{
+  emits('deleteEvent',bloodObj.value.id)
+}
 console.log();
 </script>
 
@@ -40,7 +48,12 @@ console.log();
   text-align: center;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
+.main-cell:hover .delete {
+  visibility: visible;
+}
+
 .main-cell .block {
   flex: 1;
   display: flex;
@@ -52,5 +65,9 @@ console.log();
   margin-bottom: 10px;
   font-size: 14px;
   color: var(--el-text-color-secondary);
+}
+.delete {
+  visibility: hidden;
+  transform: translateX(100%);
 }
 </style>

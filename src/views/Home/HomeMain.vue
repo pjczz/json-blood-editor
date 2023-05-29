@@ -1,13 +1,18 @@
 <template>
   <div class="home-main">
     <div class="main-body">
-    <div v-for="(item, index) in store.bloodJSon" key="item.id">
-      <MainCell :blood-obj="item" />
-      
+      <div v-for="(item, index) in store.bloodJSon" key="item.id">
+        <MainCell :blood-obj="item" @deleteEvent="deleteForm" />
+      </div>
+      <div class="insert">
+        <el-button
+          type="primary"
+          size="large"
+          :icon="Plus"
+          @click="goInsert()"
+        />
+      </div>
     </div>
-    <div class="insert"><el-button type="primary" size="large" :icon="Plus" @click="goInsert()" /></div>
-    
-  </div>
   </div>
 </template>
 
@@ -24,18 +29,26 @@ import {
   toRefs,
 } from "vue";
 import MainCell from "./MainCell.vue";
-import { Plus } from '@element-plus/icons-vue'
-import {useBlood} from "../../store/index.js";
-import {useRouter} from 'vue-router';
-let store = useBlood()
-let router = useRouter()
+import { Plus } from "@element-plus/icons-vue";
+import { useBlood } from "../../store/index.js";
+import { useRouter } from "vue-router";
+let store = useBlood();
+let router = useRouter();
 const props = defineProps({
   bloodJSon: { type: Array, required: true, default: () => [] },
 });
-const goInsert=()=>{
-  router.push({path:'/insert'})
-}
-console.log();
+const goInsert = () => {
+  router.push({ path: "/insert" });
+};
+//处理子组件删除事件
+const deleteForm = (payload) => {
+  console.log(payload);
+  store.bloodJSon.forEach((item,index)=>{
+    if(payload==item.id){
+      store.bloodJSon.splice(index,1)
+    }
+  })
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -44,11 +57,10 @@ console.log();
   display: grid;
   grid-template-columns: repeat(5, 20%);
   grid-gap: 20px;
-  .insert{
+  .insert {
     display: flex;
-    justify-content:center;
-    align-items:center;
+    justify-content: center;
+    align-items: center;
   }
-
 }
 </style>

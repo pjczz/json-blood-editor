@@ -18,7 +18,7 @@
               <span>编辑剧本</span>
             </el-menu-item>
             <el-menu-item index="new">
-              <span>使用已有角色新建剧本</span>
+              <span>添加已有角色</span>
             </el-menu-item>
             <el-menu-item index="3">
               <span>开摆</span>
