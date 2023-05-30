@@ -34,7 +34,8 @@
             :icon="Download"
             :value="JSON.stringify(store.bloodJSon)"
             @click="saveJSON()"
-          >导出</el-button>
+            >导出</el-button
+          >
           <!-- Trigger 
           <button class="cpbtn" data-clipboard-target="#foo">
             <img
@@ -54,45 +55,20 @@ import { ref } from "vue";
 import { Download } from "@element-plus/icons-vue";
 import { useRoute, useRouter } from "vue-router";
 import { useBlood } from "../store/index.js";
-const route = useRoute();
-const router = useRouter();
 
 let store = useBlood();
-let bloodJSon = ref<Object[]>([{}]);
-let result = ref("");
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-  switch (key) {
-    case "1":
-      if (route.name != "home") {
-        router.push({ name: "home" });
-      }
-      break;
-    case "2":
-      if (route.name != "new") {
-        router.push({ name: "new" });
-      }
-      break;
-    case "3":
-      if (route.name != "about") {
-        router.push({ name: "about" });
-      }
-      break;
-    case "4":
-      break;
-  }
-};
+const handleOpen = (key: string, keyPath: string[]) => {};
 const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath);
 };
 const saveJSON = () => {
   // 生成json文件
-  const filename = "custom.json";
-  const blob = new Blob([JSON.stringify(store.bloodJSon)], {
+  const filename: string = "custom.json";
+  const blob: Blob = new Blob([JSON.stringify(store.bloodJSon)], {
     type: "text/json",
   });
-  const e = document.createEvent("MouseEvents");
-  const a = document.createElement("a");
+  const e: Event = document.createEvent("MouseEvents");
+  const a: HTMLElement = document.createElement("a");
   a.download = filename;
   a.href = window.URL.createObjectURL(blob);
   a.dataset.downloadurl = ["text/json", a.download, a.href].join(":");
@@ -118,6 +94,7 @@ const saveJSON = () => {
 </script>
 
 <style lang="less" scoped>
+
 .common-layout {
   width: 100%;
 }

@@ -1,47 +1,59 @@
 <template>
-  <el-button type="primary" :icon="Remove" @click="clearBloodJSon()">清空缓存数据</el-button>
-  <el-transfer
-    v-model="Tfvalue"
-    filterable
-    :filter-method="filterMethod"
-    filter-placeholder="State Abbreviations"
-    :data="data[0]"
-    :titles="['镇民列表', '当前镇民角色']"
-  />
-  <el-transfer
-    v-model="Osvalue"
-    filterable
-    :filter-method="filterMethod"
-    filter-placeholder="State Abbreviations"
-    :data="data[1]"
-    :titles="['外来列表', '当前外来角色']"
-  />
-  <el-transfer
-    v-model="Mivalue"
-    filterable
-    :filter-method="filterMethod"
-    filter-placeholder="State Abbreviations"
-    :data="data[2]"
-    :titles="['爪牙列表', '当前爪牙角色']"
-  />
-  <el-transfer
-    v-model="Dmvalue"
-    filterable
-    :filter-method="filterMethod"
-    filter-placeholder="State Abbreviations"
-    :data="data[3]"
-    :titles="['恶魔列表', '当前恶魔角色']"
-  />
-  <el-button type="primary" @click="submitForm()"> 保存 </el-button>
+  <div class="new">
+    <el-button type="primary" :icon="Remove" @click="clearBloodJSon()"
+      >清空缓存数据</el-button
+    >
+    <div class="transfer">
+      <el-transfer
+        v-model="Tfvalue"
+        filterable
+        :filter-method="filterMethod"
+        filter-placeholder="State Abbreviations"
+        :data="data[0]"
+        :titles="['镇民列表', '当前镇民角色']"
+      />
+    </div>
+    <div class="transfer">
+      <el-transfer
+        v-model="Osvalue"
+        filterable
+        :filter-method="filterMethod"
+        filter-placeholder="State Abbreviations"
+        :data="data[1]"
+        :titles="['外来列表', '当前外来角色']"
+      />
+    </div>
+    <div class="transfer">
+      <el-transfer
+        v-model="Mivalue"
+        filterable
+        :filter-method="filterMethod"
+        filter-placeholder="State Abbreviations"
+        :data="data[2]"
+        :titles="['爪牙列表', '当前爪牙角色']"
+      />
+    </div>
+    <div class="transfer">
+      <el-transfer
+        v-model="Dmvalue"
+        filterable
+        :filter-method="filterMethod"
+        filter-placeholder="State Abbreviations"
+        :data="data[3]"
+        :titles="['恶魔列表', '当前恶魔角色']"
+      />
+    </div>
+  </div>
+  <el-button type="primary" @click="submitForm()"> 添加 </el-button>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useBlood } from "../../store/index.js";
-import {Remove} from "@element-plus/icons-vue";
-import { ElMessage, ElMessageBox } from 'element-plus'
-import type { Action } from 'element-plus'
+import { Remove } from "@element-plus/icons-vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import type { Action } from "element-plus";
 
 let store = useBlood();
 let route = useRoute();
@@ -110,7 +122,16 @@ const generateData = () => {
       initial: demon.value[index].name,
     });
   });
-  return [Tfdata, Osdata, Midata, Dmdata, townsfolk.value, outsider.value, minion.value, demon.value];
+  return [
+    Tfdata,
+    Osdata,
+    Midata,
+    Dmdata,
+    townsfolk.value,
+    outsider.value,
+    minion.value,
+    demon.value,
+  ];
 };
 
 const data = ref<Option[][]>(generateData());
@@ -140,20 +161,30 @@ const submitForm = () => {
     store.bloodJSon.push(data.value[7][item]);
   });
 
-  ElMessageBox.alert('保存成功！注意不要重复保存，保存为添加机制！', 'Title', {
+  ElMessageBox.alert("保存成功！注意不要重复保存，保存为添加机制！", "Title", {
     // if you want to disable its autofocus
     // autofocus: false,
-    confirmButtonText: 'OK',
+    confirmButtonText: "OK",
     callback: (action: Action) => {
       ElMessage({
-        type: 'info',
-        message: `保存成功: ${action}`,
-      })
+        type: "success",
+        message: `保存成功`,
+      });
     },
-  })
+  });
 };
-// 清除之前的数据 
-const clearBloodJSon=()=>{
-  store.bloodJSon= []
-}
+// 清除之前的数据
+const clearBloodJSon = () => {
+  store.bloodJSon = [];
+};
 </script>
+<style lang="less" scoped>
+.new {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.transfer {
+  margin-bottom: 30px;
+}
+</style>

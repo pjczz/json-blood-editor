@@ -30,10 +30,6 @@
       <el-form-item
         label="其他夜顺序"
         prop="otherNight"
-        :rules="[
-          { required: true, message: '其他夜顺序为数字，不行动请输入0' },
-          { type: 'number', message: '其他夜顺序必须是数字' },
-        ]"
       >
         <el-input v-model.number="bloodJSon.otherNight" />
       </el-form-item>
@@ -75,7 +71,7 @@
         prop="id"
         :rules="[
           { required: true, message: '角色必须有id' },
-          { type: 'string', message: 'id必须是数字' },
+          { type: 'string', message: 'id必须是字符' },
         ]"
       >
         <el-input v-model="bloodJSon.id" />
@@ -99,10 +95,6 @@
       <el-form-item
         label="首夜顺序"
         prop="firstNight"
-        :rules="[
-          { required: true, message: '首夜顺序必须要有，不行动请输入0' },
-          { type: 'number', message: '首夜顺序必须是数字' },
-        ]"
       >
         <el-input v-model.number="bloodJSon.firstNight" />
       </el-form-item>

@@ -9,7 +9,7 @@
       ref="formRef"
     >
       <el-form-item
-        :label="item"
+        :label="chineseName(item)"
         v-for="(item, index) in Object.keys(bloodJSon)"
         :key="index"
       >
@@ -17,7 +17,7 @@
           v-model="bloodJSon[item]"
           v-if="item == 'setup' || item == 'isOfficial'"
         />
-        <template v-else-if="(item == 'reminders')">
+        <template v-else-if="item == 'reminders'">
           <el-tag
             v-for="tag in bloodJSon.reminders"
             :key="tag"
@@ -31,7 +31,6 @@
           <el-input
             style="width: 50px"
             v-if="inputVisible"
-           
             v-model="inputValue"
             class="w-50 m-2"
             size="small"
@@ -65,18 +64,63 @@ import { useRoute, useRouter } from "vue-router";
 import type { FormInstance } from "element-plus";
 import { useBlood } from "../../store/index.js";
 import { ElInput } from "element-plus";
+type bloodJSonType = {
+  ability: string;
+  edition: string;
+  firstNight: number;
+  firstNightReminder: string;
+  id: string;
+  image: string;
+  name: string;
+  otherNightReminder: string;
+  otherNight:number;
+  reminders: string[];
+  setup: boolean;
+  team: string;
+};
+let translation = reactive({
+  ability: "能力",
+  edition: "版本",
+  firstNight: "首夜行动顺序",
+  firstNightReminder: "首夜行动提示",
+  id: "id",
+  image: "图片地址",
+  name: "角色名",
+  otherNight:'其他夜晚行动顺序',
+  otherNightReminder: "其他夜行动顺序",
+  reminders: "提示（可多个）",
+  setup: "是否首夜行动",
+  team: "阵营",
+});
+const chineseName= (item:string)=>{
+  return translation[item]? translation[item] : item
+}
 let store = useBlood();
 let route = useRoute();
 let router = useRouter();
-let bloodJSon = reactive({});
-store.bloodJSon.forEach((item, index) => {
+let bloodJSon = reactive<bloodJSonType>({
+  ability: "",
+  edition: "",
+  firstNight: 0,
+  firstNightReminder: "",
+  id: "",
+  otherNight:0,
+  image: "",
+  name: "",
+  otherNightReminder: "",
+  reminders: [],
+  setup: false,
+  team: "",
+});
+
+store.bloodJSon.forEach((item: bloodJSonType, index: number) => {
   if (route.params.id == item.id) {
     Object.keys(item).forEach((ele, index) => {
-      if(typeof item[ele] != 'object'){
+      if (typeof item[ele] != "object") {
         bloodJSon[ele] = item[ele];
+      } else {
+        bloodJSon[ele] = [...item[ele]];
       }
-      else {bloodJSon[ele] = [...item[ele]];}
-      
     });
   }
 });
@@ -104,9 +148,9 @@ const handleClose = (tag: string) => {
 const showInput = () => {
   inputVisible.value = true;
   //这有经典element的诡异bug 莫名其妙用不了ref 非常有趣
- // nextTick(() => {
+  // nextTick(() => {
   //  InputRef.value!.input!.focus();
- // });
+  // });
 };
 
 const handleInputConfirm = () => {

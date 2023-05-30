@@ -1,8 +1,13 @@
 <template>
   <div class="main-cell" >
     <div class="delete">
-      <el-button @click="deleteEvent()"><el-icon><Delete /></el-icon
+      <el-popconfirm title="确定删除该角色吗" @confirm="deleteEvent()">
+    <template #reference>
+      <el-button><el-icon><Delete /></el-icon
       ></el-button>
+    </template>
+  </el-popconfirm>
+    
     </div>
     <div class="block" @click="toEdit">
       <el-avatar shape="square" :size="100" fit="cover" :src="bloodObj.image" />
@@ -50,6 +55,16 @@ console.log();
   align-items: center;
   flex-direction: column;
 }
+.main-cell:hover{
+  cursor: pointer;
+  .block{
+    transition: 1s;
+			/* 过度时间 */
+		transform: scale(1.1);
+
+  }
+  
+}
 .main-cell:hover .delete {
   visibility: visible;
 }
@@ -64,7 +79,6 @@ console.log();
 .main-cell .title {
   margin-bottom: 10px;
   font-size: 14px;
-  color: var(--el-text-color-secondary);
 }
 .delete {
   visibility: hidden;

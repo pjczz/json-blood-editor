@@ -18,10 +18,10 @@
 import { ref, reactive } from "vue";
 import HomeMain from "./HomeMain.vue";
 import { useBlood } from "../../store/index.js";
-
 let store = useBlood();
 let bloodJSon = ref<Object[]>([{}]);
-let result = ref("");
+// 
+let result = ref<string>("");
 
 //上传
 const handleFile = function (e: Event) {
@@ -40,6 +40,10 @@ const handleFile = function (e: Event) {
 </script>
 
 <style lang="less" scoped>
+.common-layout{
+  width: 100%;
+  overflow: visible;
+}
 .el-row {
   margin-bottom: 20px;
 }
