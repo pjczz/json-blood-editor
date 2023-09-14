@@ -1,51 +1,36 @@
 <template>
   <div class="edit">
     <el-button type="primary" @click="goBack()">返回</el-button>
-    <el-form
-      :label-position="labelPosition"
-      label-width="200px"
-      :model="bloodJSon"
-      style="max-width: 1000px"
-      ref="formRef"
-    >
-      <el-form-item
-        :label="chineseName(item)"
-        v-for="(item, index) in Object.keys(bloodJSon)"
-        :key="index"
-      >
-        <el-switch
-          v-model="bloodJSon[item]"
-          v-if="item == 'setup' || item == 'isOfficial'"
-        />
+    <el-form :label-position="labelPosition" label-width="200px" :model="bloodJSon" style="max-width: 1000px"
+      ref="formRef">
+      <el-form-item :label="chineseName(item)" v-for="(item, index) in Object.keys(bloodJSon)" :key="index">
+        <el-switch v-model="bloodJSon[item]" v-if="item == 'setup' || item == 'isOfficial'" />
         <template v-else-if="item == 'reminders'">
-          <el-tag
-            v-for="tag in bloodJSon.reminders"
-            :key="tag"
-            class="mx-1"
-            closable
-            :disable-transitions="false"
-            @close="handleClose(tag)"
-          >
+          <el-tag v-for="tag in bloodJSon.reminders" :key="tag" class="mx-1" closable :disable-transitions="false"
+            @close="handleClose(tag)">
             {{ tag }}
           </el-tag>
-          <el-input
-            style="width: 50px"
-            v-if="inputVisible"
-            v-model="inputValue"
-            class="w-50 m-2"
-            size="small"
-            @keyup.enter="handleInputConfirm"
-            @blur="handleInputConfirm"
-          />
-          <el-button
-            v-else
-            class="button-new-tag ml-1"
-            size="small"
-            @click="showInput"
-          >
+          <el-input style="width: 50px" v-if="inputVisible" v-model="inputValue" class="w-50 m-2" size="small"
+            @keyup.enter="handleInputConfirm" @blur="handleInputConfirm" />
+          <el-button v-else class="button-new-tag ml-1" size="small" @click="showInput">
             + 添加提示
           </el-button>
         </template>
+
+        <template v-else-if="item == 'state'">
+          <el-input v-model="bloodJSon[item].stateName">
+          </el-input>
+          <el-input v-model="bloodJSon[item].stateDescription">
+          </el-input>
+        </template>
+
+        <template v-else-if="item == 'status'">
+          <el-input v-model="bloodJSon[item].stateName">
+          </el-input>
+          <el-input v-model="bloodJSon[item].stateSkill">
+          </el-input>
+        </template>
+
         <el-input v-model="bloodJSon[item]" v-else />
       </el-form-item>
 
@@ -63,7 +48,7 @@ import { ref, reactive, nextTick, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { FormInstance } from "element-plus";
 import { useBlood } from "../../store/index.js";
-import { ElInput } from "element-plus";
+import { ElInput , ElMessage } from "element-plus";
 type bloodJSonType = {
   ability: string;
   edition: string;
@@ -73,10 +58,12 @@ type bloodJSonType = {
   image: string;
   name: string;
   otherNightReminder: string;
-  otherNight:number;
+  otherNight: number;
   reminders: string[];
   setup: boolean;
   team: string;
+  state: Object[];
+  status: Object[];
 };
 let translation = reactive({
   ability: "能力",
@@ -86,14 +73,16 @@ let translation = reactive({
   id: "id",
   image: "图片地址",
   name: "角色名",
-  otherNight:'其他夜晚行动顺序',
+  otherNight: '其他夜晚行动顺序',
   otherNightReminder: "其他夜行动顺序",
   reminders: "提示（可多个）",
   setup: "是否首夜行动",
   team: "阵营",
+  state: "标注（原创）",
+  status: "状态（原创）",
 });
-const chineseName= (item:string)=>{
-  return translation[item]? translation[item] : item
+const chineseName = (item: string) => {
+  return translation[item] ? translation[item] : item
 }
 let store = useBlood();
 let route = useRoute();
@@ -104,13 +93,15 @@ let bloodJSon = reactive<bloodJSonType>({
   firstNight: 0,
   firstNightReminder: "",
   id: "",
-  otherNight:0,
+  otherNight: 0,
   image: "",
   name: "",
   otherNightReminder: "",
   reminders: [],
   setup: false,
   team: "",
+  state: [{ stateName: '', stateDescription: '' }],
+  status: [{ stateName: '', stateSkill: '' }],
 });
 
 store.bloodJSon.forEach((item: bloodJSonType, index: number) => {
@@ -140,6 +131,10 @@ const submitForm = (formEl: FormInstance | undefined) => {
       store.bloodJSon[index] = bloodJSon;
     }
   });
+  ElMessage({
+    message: '保存成功！',
+    type: 'success',
+  })
 };
 const handleClose = (tag: string) => {
   bloodJSon.reminders.splice(bloodJSon.reminders.indexOf(tag), 1);
@@ -169,6 +164,7 @@ const handleInputConfirm = () => {
   text-align: center;
   justify-content: space-between;
 }
+
 .main-cell .block {
   flex: 1;
   display: flex;
