@@ -3,7 +3,7 @@
     <el-button type="primary" @click="goBack()">返回</el-button>
     <el-form :label-position="labelPosition" label-width="200px" :model="bloodJSon" style="max-width: 1000px"
       ref="formRef">
-      <el-form-item :label="chineseName(item)" v-for="(item, index) in Object.keys(bloodJSon)" :key="index">
+      <el-form-item :label="chineseName(item)" v-for="(item, index) in Object.keys(bloodJSon)" :key="index" v-if="item != 'customTeam'">
         <el-switch v-model="bloodJSon[item]" v-if="item == 'setup' || item == 'isOfficial'" />
         <template v-else-if="item == 'reminders'">
           <el-tag v-for="tag in bloodJSon.reminders" :key="tag" class="mx-1" closable :disable-transitions="false"
@@ -31,7 +31,17 @@
           </el-input>
         </template>
 
-        <el-input v-model="bloodJSon[item]" v-else />
+        <template v-else-if="item == 'team'">
+          <el-select v-model="bloodJSon[item]" class="m-2" placeholder="Select" size="large">
+            <el-option v-for="item in teamOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <el-input
+            v-if="bloodJSon.team != 'townsfolk' && bloodJSon.team != 'demon' && bloodJSon.team != 'outsider' && bloodJSon.team != 'minion'"
+            v-model="bloodJSon.customTeam"></el-input>
+        </template>
+        <template v-else-if="item == 'customTeam'">
+        </template>
+        <el-input type="textarea" v-model="bloodJSon[item]" v-else />
       </el-form-item>
 
       <el-form-item>
@@ -48,7 +58,7 @@ import { ref, reactive, nextTick, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { FormInstance } from "element-plus";
 import { useBlood } from "../../store/index.js";
-import { ElInput , ElMessage } from "element-plus";
+import { ElInput, ElMessage } from "element-plus";
 type bloodJSonType = {
   ability: string;
   edition: string;
@@ -62,6 +72,7 @@ type bloodJSonType = {
   reminders: string[];
   setup: boolean;
   team: string;
+  customTeam?: string;
   state: Object[];
   status: Object[];
 };
@@ -79,11 +90,19 @@ let translation = reactive({
   setup: "是否首夜行动",
   team: "阵营",
   state: "标注（原创）",
+  customTeam: "",
   status: "状态（原创）",
 });
 const chineseName = (item: string) => {
   return translation[item] ? translation[item] : item
 }
+const teamOptions = [
+  { label: '镇民', value: 'townsfolk' },
+  { label: '外来', value: 'outsider' },
+  { label: '恶魔', value: 'minion' },
+  { label: '爪牙', value: 'demon' },
+  { label: '自定义(可以用于创建提示)', value: 'custom' }
+]
 let store = useBlood();
 let route = useRoute();
 let router = useRouter();
@@ -113,6 +132,7 @@ store.bloodJSon.forEach((item: bloodJSonType, index: number) => {
         bloodJSon[ele] = [...item[ele]];
       }
     });
+    bloodJSon.customTeam = bloodJSon.team
   }
 });
 const inputVisible = ref(false);
@@ -128,7 +148,12 @@ const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   store.bloodJSon.forEach((item, index) => {
     if (route.params.id == item.id) {
-      store.bloodJSon[index] = bloodJSon;
+      let tempObj = { ...bloodJSon }
+      if (tempObj.team == 'custom' && tempObj?.customTeam) {
+        tempObj.team = tempObj.customTeam
+        delete tempObj.customTeam
+      }
+      store.bloodJSon[index] = tempObj;
     }
   });
   ElMessage({
