@@ -1,6 +1,6 @@
 <template>
   <div class="insert">
-    <el-button type="primary" @click="goBack()">返回</el-button>
+    <el-button type="primary" @click="goBack()" style="margin: 20px 0 30px 0;">返回</el-button>
     <el-form :label-position="labelPosition" label-width="200px" :model="bloodJSon" style="max-width: 1000px"
       ref="formRef">
       <el-form-item label="首夜提示">
@@ -163,4 +163,7 @@ const handleInputConfirm = () => {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.insert{
+  width: 800px;
+}</style>

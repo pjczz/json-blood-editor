@@ -1,54 +1,31 @@
 <template>
   <div class="new">
-    <el-button type="primary" :icon="Remove" @click="clearBloodJSon()"
-      >清空缓存数据</el-button
-    >
-    <div class="transfer">
-      <el-transfer
-        v-model="Tfvalue"
-        filterable
-        :filter-method="filterMethod"
-        filter-placeholder="State Abbreviations"
-        :data="data[0]"
-        :titles="['镇民列表', '当前镇民角色']"
-      />
+    <el-button type="primary" :icon="Remove" @click="clearBloodJSon()">清空缓存数据</el-button>
+    <el-select v-model="selectTeam" class="m-2" placeholder="请选择阵营" size="large">
+      <el-option v-for="item in teamOptions" :key="item.value" :label="item.label" :value="item.value" />
+    </el-select>
+    <div class="transfer" v-if="selectTeam == 'townsfolk'">
+      <el-transfer v-model="Tfvalue" filterable :filter-method="filterMethod" filter-placeholder="State Abbreviations"
+        :data="data[0]" :titles="['镇民列表', '当前镇民角色']" />
     </div>
-    <div class="transfer">
-      <el-transfer
-        v-model="Osvalue"
-        filterable
-        :filter-method="filterMethod"
-        filter-placeholder="State Abbreviations"
-        :data="data[1]"
-        :titles="['外来列表', '当前外来角色']"
-      />
+    <div class="transfer" v-if="selectTeam == 'outsider'">
+      <el-transfer v-model="Osvalue" filterable :filter-method="filterMethod" filter-placeholder="State Abbreviations"
+        :data="data[1]" :titles="['外来列表', '当前外来角色']" />
     </div>
-    <div class="transfer">
-      <el-transfer
-        v-model="Mivalue"
-        filterable
-        :filter-method="filterMethod"
-        filter-placeholder="State Abbreviations"
-        :data="data[2]"
-        :titles="['爪牙列表', '当前爪牙角色']"
-      />
+    <div class="transfer" v-if="selectTeam == 'minion'">
+      <el-transfer v-model="Mivalue" filterable :filter-method="filterMethod" filter-placeholder="State Abbreviations"
+        :data="data[2]" :titles="['爪牙列表', '当前爪牙角色']" />
     </div>
-    <div class="transfer">
-      <el-transfer
-        v-model="Dmvalue"
-        filterable
-        :filter-method="filterMethod"
-        filter-placeholder="State Abbreviations"
-        :data="data[3]"
-        :titles="['恶魔列表', '当前恶魔角色']"
-      />
+    <div class="transfer" v-if="selectTeam == 'demon'">
+      <el-transfer v-model="Dmvalue" filterable :filter-method="filterMethod" filter-placeholder="State Abbreviations"
+        :data="data[3]" :titles="['恶魔列表', '当前恶魔角色']" />
     </div>
   </div>
   <el-button type="primary" @click="submitForm()"> 添加 </el-button>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useBlood } from "../../store/index.js";
 import { Remove } from "@element-plus/icons-vue";
@@ -71,7 +48,13 @@ interface Option {
   setup: boolean;
   team: string;
 }
-
+const selectTeam:Ref<string> = ref('townsfolk')
+  const teamOptions = ref([
+    { label: "镇民", value: "townsfolk" },
+    { label: "外来", value: "outsider" },
+    { label: "恶魔", value: "minion" },
+    { label: "爪牙", value: "demon" },
+  ])
 const generateData = () => {
   // 思路是将四种身份类型分开添加 到时候搞个华灯json数据直接开冲
   const Tfdata: Option[] = [];
@@ -83,7 +66,7 @@ const generateData = () => {
   const outsider = ref([]);
   const minion = ref([]);
   const demon = ref([]);
-
+  
   store.AllJSon.forEach((item, index) => {
     if (item.team) {
       if (item.team == "townsfolk") townsfolk.value.push(item);
@@ -92,7 +75,7 @@ const generateData = () => {
       if (item.team == "demon") demon.value.push(item);
     }
   });
-
+  
   const initials = townsfolk.value;
   townsfolk.value.forEach((item, index) => {
     Tfdata.push({
@@ -144,24 +127,26 @@ const filterMethod = (query: string, item: any) => {
   return item.initial.includes(query);
 };
 const submitForm = () => {
+  store.setBloodJSon([])
+  const bloodJSon = []
   // 镇民
   Tfvalue.value.forEach((item, index) => {
-    store.bloodJSon.push(data.value[4][item]);
+    bloodJSon.push(data.value[4][item]);
   });
   // 外来
   Osvalue.value.forEach((item, index) => {
-    store.bloodJSon.push(data.value[5][item]);
+    bloodJSon.push(data.value[5][item]);
   });
   // 爪牙
   Mivalue.value.forEach((item, index) => {
-    store.bloodJSon.push(data.value[6][item]);
+    bloodJSon.push(data.value[6][item]);
   });
   // 恶魔
   Dmvalue.value.forEach((item, index) => {
-    store.bloodJSon.push(data.value[7][item]);
+    bloodJSon.push(data.value[7][item]);
   });
-
-  ElMessageBox.alert("保存成功！注意不要重复保存，保存为添加机制！", "Title", {
+  store.setBloodJSon(bloodJSon)
+  ElMessageBox.alert("保存成功！", "Title", {
     // if you want to disable its autofocus
     // autofocus: false,
     confirmButtonText: "OK",
@@ -184,6 +169,7 @@ const clearBloodJSon = () => {
   flex-direction: column;
   justify-content: space-between;
 }
+
 .transfer {
   margin-bottom: 30px;
 }

@@ -27,6 +27,6 @@ body::before {
   z-index: -1;
 }
 body {
-  height: 100vh;
+  // height: 100vh;
 }
 </style>
