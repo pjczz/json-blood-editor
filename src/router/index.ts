@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/Home/HomeView.vue'
 import Edit from "../views/Home/Edit.vue"
 import NewMain from "../views/New/NewMain.vue"
-import Insert from "../views/Insert/Insert.vue";
+import Insert from "../views/Insert/insert.vue";
 
 
 const routes: Array<RouteRecordRaw> = [
