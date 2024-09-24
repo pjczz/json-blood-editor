@@ -61,7 +61,7 @@
 import { ref, reactive, nextTick, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { FormInstance } from "element-plus";
-import { useBlood } from "../../store/index.js";
+import { useBlood } from "@/store/index";
 import { ElInput, ElMessage } from "element-plus";
 type bloodJSonType = {
   ability: string;

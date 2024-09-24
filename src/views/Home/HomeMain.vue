@@ -5,26 +5,20 @@
         <MainCell :blood-obj="item" @deleteEvent="deleteForm" />
       </div>
       <div class="insert">
-        <el-button
-          type="primary"
-          size="large"
-          :icon="Plus"
-          @click="dialogVisible = true"
-        />
-        <el-dialog
-          v-model="dialogVisible"
-          title="Tips"
-          width="40%"
-          center
-        >
+        <el-button type="primary" size="large" :icon="Plus" @click="dialogVisible = true" />
+        <el-dialog v-model="dialogVisible" title="Tips" width="40%" center>
           <template #header>
             <span class="dialog-header">
               <div class="avatar-uploader" @click="goInsert">
-                <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
+                <el-icon class="avatar-uploader-icon">
+                  <Plus />
+                </el-icon>
                 添加自定义角色
               </div>
               <div class="avatar-uploader" @click="goNew">
-                <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
+                <el-icon class="avatar-uploader-icon">
+                  <Plus />
+                </el-icon>
                 添加已有角色
               </div>
             </span>
@@ -52,7 +46,7 @@ const dialogVisible = ref<boolean>(false);
 const goInsert = () => {
   router.push({ path: "/insert" });
 };
-const goNew= ()=>{
+const goNew = () => {
   router.push({ path: "/new" })
 }
 
@@ -68,28 +62,36 @@ const deleteForm = (payload: string) => {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
-.home-main{width: 100%;}
+.home-main {
+  width: 1000px;
+  height: 80vh;
+}
+
 .main-body {
   display: grid;
   grid-template-columns: repeat(6, 15%);
   grid-gap: 20px;
+
   .insert {
     display: flex;
     justify-content: center;
     align-items: center;
   }
 }
-.dialog-header{
+
+.dialog-header {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   flex: 1;
 }
+
 .avatar-uploader {
   width: 178px;
   height: 178px;
   display: block;
 }
+
 .avatar-uploader {
   border: 1px dashed var(--el-border-color);
   border-radius: 6px;

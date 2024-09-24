@@ -4,7 +4,7 @@
     <el-select v-model="selectTeam" class="m-2" placeholder="请选择阵营" size="large">
       <el-option v-for="item in teamOptions" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <div class="transfer" v-if="selectTeam == 'townsfolk'">
+    <!-- <div class="transfer" v-if="selectTeam == 'townsfolk'">
       <el-transfer v-model="Tfvalue" filterable :filter-method="filterMethod" filter-placeholder="State Abbreviations"
         :data="data[0]" :titles="['镇民列表', '当前镇民角色']" />
     </div>
@@ -19,6 +19,26 @@
     <div class="transfer" v-if="selectTeam == 'demon'">
       <el-transfer v-model="Dmvalue" filterable :filter-method="filterMethod" filter-placeholder="State Abbreviations"
         :data="data[3]" :titles="['恶魔列表', '当前恶魔角色']" />
+    </div> -->
+    <div v-for="(item, index) in teamOptions" :key="index">
+      <div class="team-main" v-if="selectTeam == item.value">
+        <VueDraggable ref="el" v-model="data[0]" class="drag-list" animation="150" ghostClass="ghost" group="people"
+          @update="onUpdate" @add="onAdd" @remove="remove">
+          <div v-for="(citem, cindex) in data[0]" :key="cindex" class="drag-list-item">
+
+            <el-tooltip class="box-item" effect="dark" :content="citem.ability" placement="left-start">
+              {{ citem.label }}
+            </el-tooltip>
+          </div>
+        </VueDraggable>
+        <VueDraggable ref="el1" v-model="Tfvalue" class="drag-list" animation="150" ghostClass="ghost" group="people"
+          @update="onUpdate" @add="onAdd" @remove="remove">
+          <div v-for="(citem, cindex) in Tfvalue" :key="cindex" class="drag-list-item">
+            {{ citem.label }}
+          </div>
+        </VueDraggable>
+      </div>
+
     </div>
   </div>
   <el-button type="primary" @click="submitForm()"> 添加 </el-button>
@@ -27,10 +47,11 @@
 <script lang="ts" setup>
 import { ref, Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useBlood } from "../../store/index.js";
+import { useBlood } from "@/store/index.js";
 import { Remove } from "@element-plus/icons-vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import type { Action } from "element-plus";
+import { VueDraggable } from 'vue-draggable-plus'
 
 let store = useBlood();
 let route = useRoute();
@@ -48,13 +69,14 @@ interface Option {
   setup: boolean;
   team: string;
 }
-const selectTeam:Ref<string> = ref('townsfolk')
-  const teamOptions = ref([
-    { label: "镇民", value: "townsfolk" },
-    { label: "外来", value: "outsider" },
-    { label: "恶魔", value: "minion" },
-    { label: "爪牙", value: "demon" },
-  ])
+const selectTeam: Ref<string> = ref('townsfolk')
+const teamOptions = ref([
+  { label: "镇民", value: "townsfolk" },
+  { label: "外来", value: "outsider" },
+  { label: "恶魔", value: "minion" },
+  { label: "爪牙", value: "demon" },
+])
+console.log(store.AllJSon)
 const generateData = () => {
   // 思路是将四种身份类型分开添加 到时候搞个华灯json数据直接开冲
   const Tfdata: Option[] = [];
@@ -66,7 +88,7 @@ const generateData = () => {
   const outsider = ref([]);
   const minion = ref([]);
   const demon = ref([]);
-  
+
   store.AllJSon.forEach((item, index) => {
     if (item.team) {
       if (item.team == "townsfolk") townsfolk.value.push(item);
@@ -75,34 +97,34 @@ const generateData = () => {
       if (item.team == "demon") demon.value.push(item);
     }
   });
-  
+
   const initials = townsfolk.value;
   townsfolk.value.forEach((item, index) => {
     Tfdata.push({
       label: item.name,
       key: index,
-      initial: townsfolk.value[index].name,
+      ...townsfolk.value[index]
     });
   });
   outsider.value.forEach((item, index) => {
     Osdata.push({
       label: item.name,
       key: index,
-      initial: outsider.value[index].name,
+      ...townsfolk.value[index]
     });
   });
   minion.value.forEach((item, index) => {
     Midata.push({
       label: item.name,
       key: index,
-      initial: minion.value[index].name,
+      ...townsfolk.value[index]
     });
   });
   demon.value.forEach((item, index) => {
     Dmdata.push({
       label: item.name,
       key: index,
-      initial: demon.value[index].name,
+      ...townsfolk.value[index]
     });
   });
   return [
@@ -162,12 +184,36 @@ const submitForm = () => {
 const clearBloodJSon = () => {
   store.bloodJSon = [];
 };
+const onUpdate = () => { }
+
+const onAdd = () => {
+
+}
+const remove = () => {
+
+}
 </script>
 <style lang="less" scoped>
 .new {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  .team-main {
+    width: 500px;
+    display: flex;
+    flex-wrap: nowrap;
+
+    .drag-list {
+      background-color: #fff;
+      min-height: 200px;
+      max-height: 600px;
+      overflow-y: scroll;
+      width: 200px;
+    }
+
+    .drag-list-item {}
+  }
 }
 
 .transfer {
